@@ -1,10 +1,29 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'main.html' %}
 
-</body>
-</html>
+{% block content %}
+
+    <h>Easy dinner - Order food from us</h>
+
+    {%if customers%}
+        <p> Customer List<p>
+        <table border="1">
+            <tr>
+                <td>Customer ID</td>
+                <td>Last Name</td>
+                <td>First Name </td>
+                <td>Address</td>
+                <td>Phone</td>
+                </tr>
+            {% for x in customers %}
+            <tr>
+            <td>{{ x.customer_id }}</td>
+            <td>{{ x.last_name }}</td>
+            <td>{{ x.first_name }}</td>
+            <td>{{ x.address}}</td>
+            <td>{{ x.phone}}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% endif %}
+
+{%endblock%}
