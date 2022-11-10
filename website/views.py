@@ -1,10 +1,15 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.template import loader
 from .models import Customers
 # Create your views here.
 
 
 def home(request):
-    coupons = Customers.objects.all()[:5]
-    output = '<br>'.join([str(c.last_name) for c in coupons])
-    return HttpResponse(output)
+    template = loader.get_template('home.html')
+    customers = Customers.objects.all().values()
+    context = {
+        'customers': customers,
+    }
+    return HttpResponse(template.render({}, request))
+    #return HttpResponse(template.render(context, request))
