@@ -18,7 +18,7 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name="home"),
-    path('inesrt/', views.insert, name='insert'),
+    path('insert/', views.insert, name='insert'),
     path('update/', views.update, name='update'),
     path('delete/', views.delete, name='delete'),
     path('search/', views.search, name='search'),

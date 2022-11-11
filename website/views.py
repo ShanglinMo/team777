@@ -93,13 +93,37 @@ def update(request):
                 return render(request,'update.html')
 
 
+def delete(request):
+        if request.method == 'POST':
+            if request.POST.get('order_id'):
+                with connection.cursor() as cursor:
+                    cursor.execute("DELETE FROM Orders \
+                         WHERE order_id = %s",  [request.POST.get('order_id')])
+                    return render(request, 'delete.html')  
+
+        else:
+                return render(request,'delete.html')
+
+
+def search(request):
+        if request.method == 'POST':
+            if request.POST.get('cust_id') and request.POST.get('price'):
+                with connection.cursor() as cursor:
+                    cursor.execute("UPDATE Orders SET \
+                         price = %s WHERE order_id = 1",  [request.POST.get('price')])
+                    return render(request, 'update.html')  
+
+        else:
+                return render(request,'update.html')
+
+
 # SELECT o.Date, COUNT(o.Order_ID)
 # FROM Customers c JOIN Orders o USING(Customer_Id)
 # WHERE c.Last_Name LIKE "C%" 
 # GROUP BY o.Date
 # ORDER BY o.Date;
 
-def advanced(request):
+def advance1(request):
     sql = 'SELECT o.Date, COUNT(o.Order_ID) \
         FROM Customers AS c JOIN Orders AS o USING(customer_id) \
         WHERE c.Last_Name LIKE "C%" \
@@ -112,4 +136,4 @@ def advanced(request):
     except Exception as e:
         cursor.close
 
-    return render(request,'advance1.html',{'data': SD_DATA})
+    
