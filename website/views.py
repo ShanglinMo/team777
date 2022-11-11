@@ -29,25 +29,6 @@ from django.db import connection
 from django.http import HttpResponse
 
 
-# https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Forms
-# def search(request):
-#     SD_DATA = Foods.objects.all()
-#     SD_DATA = Foods.objects.raw('SELECT * FROM Foods')[:10]
-#     # you get to this "if" if the form has been filled by the user
-#     if request.method == "POST":
-#         # form = AttendanceForm(request.POST)
-#         food = SD_DATA(request.POST)
-#         if food.is_valid():
-#             foodId = request.POST['item_id']
-#             restaurant = request.POST['restaurant']
-#             name = request.POST['name']
-#             members = 
-#             # members = Member.objects.filter(#here you do your filters as you already have the course, department and semester variables)
-#             context = {'members': members}
-#             return render(request, 'second_page.html', context)
-#     # if the form hasn't been filled by the user you display the form
-#     context = {'form': form}
-#     return render(request, 'form_page.html', context)
 
 def home(request):
 
@@ -124,16 +105,33 @@ def search(request):
 # ORDER BY o.Date;
 
 def advance1(request):
-    sql = 'SELECT o.Date, COUNT(o.Order_ID) \
+
+    cursor = connection.cursor()
+    try:
+        cursor.execute('SELECT o.Date, COUNT(o.Order_ID) \
         FROM Customers AS c JOIN Orders AS o USING(customer_id) \
         WHERE c.Last_Name LIKE "C%" \
         GROUP BY o.Date \
-        ORDER BY o.Date;'
+        ORDER BY o.Date;')
+    finally:
+        cursor.close()
+    query = cursor.fetchall()
+    return render(request, 'advance1.html',{'query': query})
+
+def advance2(request):
+
     cursor = connection.cursor()
     try:
-        cursor.execute(sql, ['localhost'])
-        row = cursor.fetchall()
-    except Exception as e:
-        cursor.close
+        cursor.execute('SELECT r.Restaurant_ID, r.Name\
+        FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
+        WHERE f.Price <= 5 and r.Cuisine_Type LIKE "%Ice Cream%"\
+        UNION\
+        SELECT r.Restaurant_ID, r.Name\
+        FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
+        WHERE f.Price <= 15 and r.Cuisine_Type LIKE "%Burger%"\
+        ORDER BY Name;')
+    finally:
+        cursor.close()
+    query = cursor.fetchall()
+    return render(request, 'advance2.html',{'query': query})
 
-    
