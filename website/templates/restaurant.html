@@ -1,0 +1,29 @@
+{% extends 'main.html' %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+
+<form method='POST' action=''> {% csrf_token %}
+    {{form|crispy}}
+        <input type="submit" value='Search'/>
+</form>
+<br>
+
+<p> Restaurants List<p>
+<table border="1">
+    <tr>
+        <td>Name</td>
+        <td>Cuisine Type</td>
+        <td>Location</td>
+        </tr>
+    {% for x in restaurants %}
+    <tr>
+    <td>{{ x.name}}</td>
+    <td>{{ x.cuisine_type }}</td>
+    <td>{{ x.location}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+
+{%endblock%}
