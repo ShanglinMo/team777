@@ -26,3 +26,4 @@ urlpatterns = [
     path('advance2/', views.advance2, name='advance2'),
     path('restaurant/', views.restaurant, name="restaurant"),
 ]
+
