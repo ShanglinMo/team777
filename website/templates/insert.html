@@ -1,0 +1,16 @@
+<html>
+<head>
+<title>INSERTION</title>
+</head>
+
+<body>
+<h1>Insert new platform</h1>
+<form action="" method="POST">
+{% csrf_token %}
+Platform Name: <input type="text" name="name"/><br/>
+platform ID: <input type="text" name="id"/><br/><br/>
+<input type="submit" value="Insert"/>
+</form>
+</body>
+
+</html>

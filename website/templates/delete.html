@@ -1,0 +1,15 @@
+<html>
+<head>
+<title>DELETION</title>
+</head>
+
+<body>
+<h1>DELETE the order from Order table by Order ID</h1>
+<form action="" method="POST">
+{% csrf_token %}
+Order_ID: <input type="text" name="order_id"/><br/>
+<input type="submit" value="Delete"/>
+</form>
+</body>
+
+</html>
