@@ -1,7 +1,20 @@
+{% extends 'main.html' %}
+
+{% load crispy_forms_tags %}
+{% block content %}
 <html>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <div>SQL script
+        <p>
+            SELECT o.Date, COUNT(o.Order_ID)
+            FROM Customers c JOIN Orders o USING(Customer_Id)
+            WHERE c.Last_Name LIKE "C%" 
+            GROUP BY o.Date
+            ORDER BY o.Date;
+        </p>
+    </div>
     <div>
         {% for obj in query %}
         <p>{{obj.0}} - {{obj.1}}</p>
@@ -12,3 +25,4 @@
 
 </body>
 </html>
+{%endblock%}
