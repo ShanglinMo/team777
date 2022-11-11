@@ -1,0 +1,26 @@
+{% extends 'main.html' %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+<html>
+<head>
+<title>UPDATE</title>
+</head>
+
+<body>
+<h1>UPDATE the Orders table</h1>
+<form action="" method="POST">
+{% csrf_token %}
+Customer_ID: <input type="text" name="cust_id"/><br/>
+Price: <input type="text" name="price"/><br/><br/>
+<input type="submit" value="Update"/>
+</form>
+<div>
+    <p>order_id - coupon - customer - item_id_list - price - date</p>
+    {% for obj in query %}
+    <p>{{obj.0}} - {{obj.1}} - {{obj.2}} - {{obj.3}} - {{obj.4}} - {{obj.5}}</p>
+    {% endfor %}
+</div>
+</body>
+
+{%endblock%}

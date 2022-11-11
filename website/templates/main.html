@@ -15,8 +15,14 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="#">Customers</a>
-            <a class="nav-item nav-link" href="{% url 'restaurant' %}">Restaurants</a>
+
+            <a class="nav-item nav-link" href="{% url 'insert' %}">Insert</a>
+            <a class="nav-item nav-link" href="{% url 'update' %}">Update</a>
+            <a class="nav-item nav-link" href="{% url 'delete' %}">Delete</a>
+            <a class="nav-item nav-link" href="{% url 'restaurant' %}">Search</a>
+            <a class="nav-item nav-link" href="{% url 'advance1' %}">SQL1</a>
+            <a class="nav-item nav-link" href="{% url 'advance2' %}">SQL2</a>
+
             <a class="nav-item nav-link disabled" href="#">Disabled</a>
           </div>
         </div>

@@ -18,5 +18,12 @@ from . import views
 
 urlpatterns = [
     path('', views.home, name="home"),
+    path('insert/', views.insert, name='insert'),
+    path('update/', views.update, name='update'),
+    path('delete/', views.delete, name='delete'),
+    path('search/', views.search, name='search'),
+    path('advance1/', views.advance1, name='advance1'),
+    path('advance2/', views.advance2, name='advance2'),
     path('restaurant/', views.restaurant, name="restaurant"),
 ]
+

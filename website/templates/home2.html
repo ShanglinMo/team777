@@ -1,0 +1,30 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <a class="collapse-item" href="{% url 'insert' %}">Insertion</a>
+    <a class="collapse-item" href="{% url 'update' %}">Update</a>
+    <a class="collapse-item" href="{% url 'delete' %}">Delete</a>
+    <a class="collapse-item" href="{% url 'search' %}">Search</a>
+    <a class="collapse-item" href="{% url 'advance1' %}">Advanced SQL Query 1</a>
+    <a class="collapse-item" href="{% url 'advance2' %}">Advanced SQL Query 2</a>
+    <div>
+    <!-- {{data}} -->
+    <form>
+        <label for="fname">Food name:</label><br>
+        <input type="text" id="fname" name="fname"><br>
+      </form>
+
+    <hr/>
+
+    {% for i in data %}
+        <div>{{ i.item_id }} - {{ i.restaurant }} - {{ i.name }} - {{ i.price }}</div>
+    {% endfor %}
+    </div>
+</head>
+<body>
+
+</body>
+</html>

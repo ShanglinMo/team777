@@ -1,0 +1,25 @@
+{% extends 'main.html' %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+<html>
+<head>
+<title>Search</title>
+</head>
+
+<body>
+<h1>Search the orders table</h1>
+<form action="" method="POST">
+{% csrf_token %}
+Order_ID is equal to: <input type="text" name="order_id"/><br/>
+Price greater than: <input type="text" name="price"/><br/><br/>
+<input type="submit" value="Search"/>
+</form>
+<div>
+    {% for obj in query %}
+    <p>{{obj.0}} - {{obj.1}}</p>
+    {% endfor %}
+</div>
+</body>
+
+{%endblock%}
