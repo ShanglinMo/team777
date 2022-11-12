@@ -99,53 +99,83 @@ def delete(request):
                 return render(request,'delete.html')
 
 
-def search(request):
-        if request.method == 'POST':
-            if request.POST.get('cust_id') and request.POST.get('price'):
-                with connection.cursor() as cursor:
-                    cursor.execute("UPDATE Orders SET \
-                         price = %s WHERE order_id = 1",  [request.POST.get('price')])
-                    return render(request, 'update.html')  
-
-        else:
-                return render(request,'update.html')
-
-
 # SELECT o.Date, COUNT(o.Order_ID)
 # FROM Customers c JOIN Orders o USING(Customer_Id)
 # WHERE c.Last_Name LIKE "C%" 
 # GROUP BY o.Date
 # ORDER BY o.Date;
 
-def advance1(request):
+# def advance1(request):
 
-    cursor = connection.cursor()
-    try:
-        cursor.execute('SELECT o.Date, COUNT(o.Order_ID) \
-        FROM Customers AS c JOIN Orders AS o USING(customer_id) \
-        WHERE c.Last_Name LIKE "C%" \
-        GROUP BY o.Date \
-        ORDER BY o.Date;')
-    finally:
-        cursor.close()
-    query = cursor.fetchall()
-    return render(request, 'advance1.html',{'query': query})
+#     cursor = connection.cursor()
+#     try:
+#         cursor.execute('SELECT o.Date, COUNT(o.Order_ID) \
+#         FROM Customers AS c JOIN Orders AS o USING(customer_id) \
+#         WHERE c.Last_Name LIKE "C%" \
+#         GROUP BY o.Date \
+#         ORDER BY o.Date;')
+#     finally:
+#         cursor.close()
+#     query = cursor.fetchall()
+#     return render(request, 'advance1.html',{'query': query})
+def advance1(request):
+# template = loader.get_template('insert.html')
+    if request.method == 'POST':
+        if request.POST.get('Last_Name') and request.POST.get("First_Name"):
+            with connection.cursor() as cursor:
+                cursor.execute('SELECT o.Date, COUNT(o.Order_ID) as order_c\
+                FROM Customers AS c JOIN Orders AS o USING(customer_id) \
+                WHERE c.Last_Name LIKE %s and c.First_Name LIKE %s\
+                GROUP BY o.Date \
+                ORDER BY o.Date;',[request.POST.get("Last_Name"),request.POST.get("First_Name")])
+                query = cursor.fetchall()
+                return render(request, 'advance1.html', {'query': query})  
+
+    else:
+            return render(request,'advance1.html')
+
+
+
+# def advance2(request):
+
+#     cursor = connection.cursor()
+#     try:
+#         cursor.execute('SELECT r.Restaurant_ID, r.Name\
+#         FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
+#         WHERE f.Price <= 5 and r.Cuisine_Type LIKE "%Ice Cream%"\
+#         UNION\
+#         SELECT r.Restaurant_ID, r.Name\
+#         FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
+#         WHERE f.Price <= 15 and r.Cuisine_Type LIKE "%Burger%"\
+#         ORDER BY Name;')
+#     finally:
+#         cursor.close()
+#     query = cursor.fetchall()
+#     return render(request, 'advance2.html',{'query': query})
+
 
 def advance2(request):
+    if request.method == 'POST':
+        if request.POST.get('Price1') and request.POST.get('Price2') and request.POST.get("Cuisine_Type1") and request.POST.get('Cuisine_Type2'):
+            with connection.cursor() as cursor:
+                price1 = request.POST.get("Price1")
+                # print(type(price1))
+                price2 = request.POST.get("Price2")
+                cuisine_type1 = '%' + request.POST.get("Cuisine_Type1") + '%'
+                cuisine_type2 = '%' + request.POST.get("Cuisine_Type2") + '%'
+                cursor.execute('SELECT r.Restaurant_ID, r.Name\
+                FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
+                WHERE f.Price <= %s and r.Cuisine_Type LIKE %s\
+                UNION\
+                SELECT r.Restaurant_ID, r.Name\
+                FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
+                WHERE f.Price <= %s and r.Cuisine_Type LIKE %s\
+                ORDER BY Name;',[price1,cuisine_type1,price2,cuisine_type2])
+                query = cursor.fetchall()
+                return render(request, 'advance2.html', {'query': query})  
+    else:
+        return render(request,'advance2.html')
 
-    cursor = connection.cursor()
-    try:
-        cursor.execute('SELECT r.Restaurant_ID, r.Name\
-        FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
-        WHERE f.Price <= 5 and r.Cuisine_Type LIKE "%Ice Cream%"\
-        UNION\
-        SELECT r.Restaurant_ID, r.Name\
-        FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
-        WHERE f.Price <= 15 and r.Cuisine_Type LIKE "%Burger%"\
-        ORDER BY Name;')
-    finally:
-        cursor.close()
-    query = cursor.fetchall()
-    return render(request, 'advance2.html',{'query': query})
+
 
 

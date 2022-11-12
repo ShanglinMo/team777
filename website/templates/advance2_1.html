@@ -1,0 +1,31 @@
+{% extends 'main.html' %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <div>SQL script
+        <p>
+            SELECT r.Restaurant_ID, r.Name
+            FROM Foods f JOIN Restaurants r USING(Restaurant_ID)
+            WHERE f.Price <= 5 and r.Cuisine_Type LIKE "%Ice Cream%"
+            UNION
+            SELECT r.Restaurant_ID, r.Name
+            FROM Foods f JOIN Restaurants r USING(Restaurant_ID)
+            WHERE f.Price <= 15 and r.Cuisine_Type LIKE "%Burger%"
+            ORDER BY Name;  
+        </p>
+    </div>
+    <div>
+        {% for obj in query %}
+        <p>{{obj.0}} - {{obj.1}}</p>
+        {% endfor %}
+    </div>
+</head>
+<body>
+
+</body>
+</html>
+{%endblock%}
