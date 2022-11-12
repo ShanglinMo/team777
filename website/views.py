@@ -1,4 +1,5 @@
 from django.shortcuts import render
+
 from .models import Foods
 from .models import Orders
 from .models import Restaurants
@@ -9,6 +10,7 @@ from django.http import HttpResponse
 from django.template import loader
 from .forms import RestaurantSearchForm
 # def home(request):
+
 
 #     SD_DATA = Foods.objects.all()
 #     sql='SELECT * FROM Foods'
@@ -173,6 +175,7 @@ def advance2(request):
                 return render(request, 'advance2.html', {'query': query})  
     else:
         return render(request,'advance2.html')
+
 
 
 
