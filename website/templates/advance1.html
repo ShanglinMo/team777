@@ -2,7 +2,30 @@
 
 {% load crispy_forms_tags %}
 {% block content %}
-<html>
+</head>
+
+<body>
+<h1>Find Your Order</h1>
+<form action="" method="POST">
+{% csrf_token %}
+Last Name: <input type="text" name="Last_Name"/><br/>
+First Name: <input type ="text" name="First_Name"><br/>
+<input type="submit" value="Search"/>
+</form>
+<br>
+<table border="1">
+    <tr>
+        <td>Date</td>
+        <td>Order Count</td>
+    </tr>
+    {% for x in query%}
+    <tr>
+    <td>{{ x.0}}</td>
+    <td>{{ x.1}}</td>
+    </tr>
+    {% endfor %}
+</table>
+<!-- <html>
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
@@ -21,8 +44,8 @@
         {% endfor %}
     </div>
 </head>
-<body>
+<body> -->
 
 </body>
-</html>
+<!-- </html> -->
 {%endblock%}

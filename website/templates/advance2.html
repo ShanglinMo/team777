@@ -2,30 +2,31 @@
 
 {% load crispy_forms_tags %}
 {% block content %}
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <div>SQL script
-        <p>
-            SELECT r.Restaurant_ID, r.Name
-            FROM Foods f JOIN Restaurants r USING(Restaurant_ID)
-            WHERE f.Price <= 5 and r.Cuisine_Type LIKE "%Ice Cream%"
-            UNION
-            SELECT r.Restaurant_ID, r.Name
-            FROM Foods f JOIN Restaurants r USING(Restaurant_ID)
-            WHERE f.Price <= 15 and r.Cuisine_Type LIKE "%Burger%"
-            ORDER BY Name;  
-        </p>
-    </div>
-    <div>
-        {% for obj in query %}
-        <p>{{obj.0}} - {{obj.1}}</p>
-        {% endfor %}
-    </div>
 </head>
-<body>
 
+<body>
+<h1>Filter the Restaurant</h1>
+<form action="" method="POST">
+{% csrf_token %}
+Price1: <input type="text" name="Price1"/><br/>
+Cuisine Type 1: <input type="text" name="Cuisine_Type1"/><br/>
+Price2: <input type ="text" name="Price2"><br/>
+Cuisine Type 2: <input type="text" name="Cuisine_Type2"/><br/>
+<input type="submit" value="Search"/>
+</form>
+<br>
+<table border="1">
+    <tr>
+        <td>Restaurant ID</td>
+        <td>Restaurant Name</td>
+    </tr>
+    {% for x in query%}
+    <tr>
+    <td>{{ x.0}}</td>
+    <td>{{ x.1}}</td>
+    </tr>
+    {% endfor %}
+</table>
 </body>
-</html>
+<!-- </html> -->
 {%endblock%}
