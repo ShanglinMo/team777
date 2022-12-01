@@ -9,6 +9,14 @@
 <form action="" method="POST">
 {% csrf_token %}
 Customer ID: <input type="text" name="Customer_ID"/><br/>
+<input type="checkbox" id="history" name="history" value="History">
+<label for="history"> Recommend favorite flavors based on my order history</label><br>
+
+<input type="checkbox" id="price" name="price" value="Price">
+<label for="price"> Recommend based on the restaurant consumption level </label><br>
+
+<input type="checkbox" id="random" name="random" value="Random">
+<label for="random"> I would like to try something new (Blind Box)</label><br>
 <br>
 <input type="submit" value="Recommend"/>
 
@@ -18,6 +26,7 @@ Customer ID: <input type="text" name="Customer_ID"/><br/>
     <tr>
         <td>Restaurant ID</td>
         <td>Restautrant Name</td>
+        <td>Cuisine Type</td>
         <td>Restautrant Consumption Level</td>
     </tr>
     {% for x in query%}
@@ -25,8 +34,14 @@ Customer ID: <input type="text" name="Customer_ID"/><br/>
     <td>{{ x.0}}</td>
     <td>{{ x.1}}</td>
     <td>{{ x.2}}</td>
+    <td>{{ x.3}}</td>
     </tr>
     {% endfor %}
 </table>
+
+<form action="http://127.0.0.1:8000/insert/">
+<input type="submit" value="Order Now"/>
+</form>
+
 </body>
 {%endblock%}
