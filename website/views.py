@@ -9,6 +9,8 @@ from django.db import connection
 from django.http import HttpResponse
 from django.template import loader
 from .forms import RestaurantSearchForm
+
+
 # def home(request):
 
 
@@ -150,13 +152,9 @@ def transaction(request):
 
 def recommendation(request):
     if request.method == "POST":
-        if request.POST.get("Customer_ID"): #and request.POST.get("Recommend on History"):
+        if request.POST.get("Customer_ID") and request.POST.get("price"):
             with connection.cursor() as cursor:
                 customerID = request.POST.get("Customer_ID")
-                # customerInfo = Orders.objects.raw('select Customer_ID, avg(Price) as avgPrice\
-                #                                     from Orders \
-                #                                     where Customer_ID = %s\
-                #                                     group by Customer_ID',[customerID])
                 cursor.execute('select Customer_ID,avg(Price) as avgPrice\
                                                      from Orders \
                                                      where Customer_ID = %s\
@@ -166,7 +164,7 @@ def recommendation(request):
                 for c in customerInfo:
                     avgPrice = c[1]
                     if int(avgPrice) <= 10:
-                        cursor.execute("select temp.Restaurant_ID, r.Name, temp.Consumption_Level\
+                        cursor.execute("select temp.Restaurant_ID, r.Name, r.Cuisine_Type, temp.Consumption_Level\
                                         from (select Restaurant_ID, Consumption_Level\
                                         from RestaurantConsumptionLevel\
                                         where Consumption_Level = 'Low'\
@@ -175,7 +173,7 @@ def recommendation(request):
                         query = cursor.fetchall()
                         return render(request, 'recommendation.html', {'query': query})
                     elif int(avgPrice) > 10 and int(avgPrice) <= 20:
-                        cursor.execute("select temp.Restaurant_ID, r.Name, temp.Consumption_Level\
+                        cursor.execute("select temp.Restaurant_ID, r.Name, r.Cuisine_Type, temp.Consumption_Level\
                                         from (select Restaurant_ID,Consumption_Level\
                                         from RestaurantConsumptionLevel\
                                         where Consumption_Level = 'Medium'\
@@ -185,14 +183,47 @@ def recommendation(request):
                         return render(request, 'recommendation.html', {'query': query}) 
                     # avgPrice > 20
                     else: 
-                        cursor.execute("select temp.Restaurant_ID, r.Name, temp.Consumption_Level\
+                        cursor.execute("select temp.Restaurant_ID, r.Name, r.Cuisine_Type, temp.Consumption_Level\
                                         from (select Restaurant_ID, Consumption_Level\
                                         from RestaurantConsumptionLevel\
                                         where Consumption_Level = 'High'\
                                         ORDER BY RAND()\
                                         limit 5) as temp natural join Restaurants r;")
                         query = cursor.fetchall()
-                        return render(request, 'recommendation.html', {'query': query})   
+                        return render(request, 'recommendation.html', {'query': query})  
+
+        elif request.POST.get("Customer_ID") and request.POST.get("history"):
+            with connection.cursor() as cursor:
+                customerID = request.POST.get("Customer_ID") 
+                cursor.execute('SELECT r.Cuisine_Type\
+                                FROM easy_dinner.Orders o natural join easy_dinner.Restaurants r natural join easy_dinner.RestaurantConsumptionLevel rcl\
+                                where Customer_ID = %s;',[customerID])
+                cuisineType = cursor.fetchall()
+                cuisineType = cuisineType[0][0]
+                temp = ''.join(cuisineType)
+                # temp = ', '.join(map(str, cuisineType))
+                cuisine_type = temp.split(",")
+                cuisine = max(cuisine_type,key=cuisine_type.count)
+                cuisine_type = '%' + cuisine + '%'
+                cursor.execute("select temp.Restaurant_ID, r.Name, r.Cuisine_Type, temp.Consumption_Level\
+                                        from (select Restaurant_ID, Consumption_Level\
+                                        from RestaurantConsumptionLevel\
+                                        ORDER BY RAND()) as temp natural join Restaurants r\
+                                        where lower(r.Cuisine_Type) like lower(%s)\
+                                        limit 5;",[cuisine_type])
+                query = cursor.fetchall()
+                return render(request, 'recommendation.html', {'query': query}) 
+        elif request.POST.get("Customer_ID") and request.POST.get("random"):
+            with connection.cursor() as cursor:
+                cursor.execute("select temp.Restaurant_ID, r.Name, r.Cuisine_Type, temp.Consumption_Level\
+                                    from (select Restaurant_ID, Consumption_Level\
+                                    from RestaurantConsumptionLevel\
+                                    ORDER BY RAND()\
+                                    limit 5) as temp natural join Restaurants r;")
+                query = cursor.fetchall()
+                return render(request, 'recommendation.html', {'query': query})  
+        else:
+            return render(request,"recommendation.html")
     else:
         return render(request,"recommendation.html")
 
