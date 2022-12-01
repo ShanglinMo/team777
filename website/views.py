@@ -213,7 +213,7 @@ def transaction(request):
 
                     cursor.execute("INSERT INTO Orders(Order_ID, Coupon_ID, Customer_ID, Item_ID_List, Price, Date)\
                                    VALUES(@order_ID, null, @cust_id,'[11014]', 0, '2022-12-24');")
-``
+
                     # cusror.execute("IF cnt > 15 THEN UPDATE Orders SET Item_ID_List = '[11014, 10986]';\
                     #                 ELSE UPDATE Orders SET Item_ID_List = '[11014]';")
                     # cursor.execute("IF @cnt > 15 THEN\
