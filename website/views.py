@@ -99,25 +99,6 @@ def delete(request):
                 return render(request,'delete.html')
 
 
-# SELECT o.Date, COUNT(o.Order_ID)
-# FROM Customers c JOIN Orders o USING(Customer_Id)
-# WHERE c.Last_Name LIKE "C%"
-# GROUP BY o.Date
-# ORDER BY o.Date;
-
-# def advance1(request):
-
-#     cursor = connection.cursor()
-#     try:
-#         cursor.execute('SELECT o.Date, COUNT(o.Order_ID) \
-#         FROM Customers AS c JOIN Orders AS o USING(customer_id) \
-#         WHERE c.Last_Name LIKE "C%" \
-#         GROUP BY o.Date \
-#         ORDER BY o.Date;')
-#     finally:
-#         cursor.close()
-#     query = cursor.fetchall()
-#     return render(request, 'advance1.html',{'query': query})
 def advance1(request):
 # template = loader.get_template('insert.html')
     if request.method == 'POST':
@@ -135,23 +116,6 @@ def advance1(request):
             return render(request,'advance1.html')
 
 
-
-# def advance2(request):
-
-#     cursor = connection.cursor()
-#     try:
-#         cursor.execute('SELECT r.Restaurant_ID, r.Name\
-#         FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
-#         WHERE f.Price <= 5 and r.Cuisine_Type LIKE "%Ice Cream%"\
-#         UNION\
-#         SELECT r.Restaurant_ID, r.Name\
-#         FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
-#         WHERE f.Price <= 15 and r.Cuisine_Type LIKE "%Burger%"\
-#         ORDER BY Name;')
-#     finally:
-#         cursor.close()
-#     query = cursor.fetchall()
-#     return render(request, 'advance2.html',{'query': query})
 
 
 def advance2(request):
@@ -176,9 +140,13 @@ def advance2(request):
     else:
         return render(request,'advance2.html')
 
-# START TRANSACTION;
-# SELECT @orderNumber:=MAX(orderNumber)+1
-# FROM Orders;
+def transaction(request):
+        with connection.cursor() as cursor:
+                cursor.execute("call christmas();")
+                cursor.execute("select * FROM Orders as O NATURAL JOIN Customers as C WHERE Date = '2024-01-01';")
+                query = cursor.fetchall()
+                return render(request, 'transaction.html', {'query': query})
+
 
 def recommendation(request):
     if request.method == "POST":
@@ -229,50 +197,6 @@ def recommendation(request):
         return render(request,"recommendation.html")
 
 
-# SELECT cust_id
-# FROM (SELECT c.customer_id as cust_id, count(order_id) as cnt
-# FROM Customers c JOIN Orders o Using(Customer_Id)
-# GROUP BY c.customer_id) as temp
-# WHERE cnt>10;
 
 
-# SELECT hoover_customer_id
-# FROM Customers
-# WHERE customer_id is cust_id and Address LIKE ‘%Hoover%’;
-
-# INSERT INTO Orders(Order_ID, Coupon_ID, Customer_ID, Item_ID_List, Price, Date)
-# VALUES(@orderNumber, null, hoover_customer_id, [11014, 10986], 0, ‘2022-12-24’);
-
-# COMMIT;
-def transaction(request):
-        if request.method == 'POST':
-            if request.POST.get('cust_id') and request.POST.get('price'):
-                with connection.cursor() as cursor:
-                    cursor.execute("START TRANSACTION;")
-                    # get the orderNumber to add the new order
-                    cursor.execute("SELECT @order_ID:=MAX(order_ID)+1\
-                                    FROM Orders;")
-
-                    #get the customer who ordered the most
-                    cursor.execute("SELECT @cust_id:=c.Customer_ID, @cnt:=count(order_id)\
-                                    FROM Customers c JOIN Orders o USING(Customer_Id)\
-                                    WHERE c.Address LIKE '%Hoover, AL%'\
-                                    GROUP BY c.Customer_ID\
-                                    ORDER BY count(order_id) desc\
-                                    limit 1;")
-
-                    cursor.execute("INSERT INTO Orders(Order_ID, Coupon_ID, Customer_ID, Item_ID_List, Price, Date)\
-                                   VALUES(@order_ID, null, @cust_id,'[11014]', 0, '2022-12-24');")
-
-                    # cusror.execute("IF cnt > 15 THEN UPDATE Orders SET Item_ID_List = '[11014, 10986]';\
-                    #                 ELSE UPDATE Orders SET Item_ID_List = '[11014]';")
-                    # cursor.execute("IF @cnt > 15 THEN\
-                    #                 SET Item_ID_List = '[11014, 10986]';")
-
-                    cursor.execute('SELECT * FROM Orders WHERE order_ID=@order_ID;')
-                    query = cursor.fetchall()
-                    return render(request, 'transaction.html', {'query': query})
-
-        else:
-                return render(request,'transaction.html')
 

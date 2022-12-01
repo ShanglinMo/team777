@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'website',
     'crispy_forms',
+    "debug_toolbar",
 ]
 
 MIDDLEWARE = [
@@ -49,6 +50,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'EasyDinner.urls'
@@ -72,6 +74,12 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'EasyDinner.wsgi.application'
 
+#debug
+INTERNAL_IPS = [
+    # ...
+    "127.0.0.1",
+    # ...
+]
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
