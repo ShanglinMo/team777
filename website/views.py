@@ -73,11 +73,11 @@ def insert(request):
 
 def update(request):
         if request.method == 'POST':
-            if request.POST.get('cust_id') and request.POST.get('price'):
+            if request.POST.get('order_id') and request.POST.get('price'):
                 with connection.cursor() as cursor:
                     cursor.execute("UPDATE Orders SET \
-                         price = %s WHERE order_id = 1",  [request.POST.get('price')])
-                    cursor.execute('SELECT * FROM Orders WHERE order_id=1;')
+                         price = %s WHERE order_id = %s",  [request.POST.get('price'),request.POST.get("order_id")])
+                    cursor.execute('SELECT * FROM Orders WHERE order_id=%s;',[request.POST.get("order_id")])
                     query = cursor.fetchall()
                     return render(request, 'update.html', {'query': query})  
 
@@ -176,6 +176,54 @@ def advance2(request):
     else:
         return render(request,'advance2.html')
 
+
+def recommendation(request):
+    if request.method == "POST":
+        if request.POST.get("Customer_ID"): #and request.POST.get("Recommend on History"):
+            with connection.cursor() as cursor:
+                customerID = request.POST.get("Customer_ID")
+                # customerInfo = Orders.objects.raw('select Customer_ID, avg(Price) as avgPrice\
+                #                                     from Orders \
+                #                                     where Customer_ID = %s\
+                #                                     group by Customer_ID',[customerID])
+                cursor.execute('select Customer_ID,avg(Price) as avgPrice\
+                                                     from Orders \
+                                                     where Customer_ID = %s\
+                                                     group by Customer_ID;',[customerID])
+                customerInfo = cursor.fetchall()
+                
+                for c in customerInfo:
+                    avgPrice = c[1]
+                    if int(avgPrice) <= 10:
+                        cursor.execute("select temp.Restaurant_ID, r.Name, temp.Consumption_Level\
+                                        from (select Restaurant_ID, Consumption_Level\
+                                        from RestaurantConsumptionLevel\
+                                        where Consumption_Level = 'Low'\
+                                        ORDER BY RAND()\
+                                        limit 5) as temp natural join Restaurants r;")
+                        query = cursor.fetchall()
+                        return render(request, 'recommendation.html', {'query': query})
+                    elif int(avgPrice) > 10 and int(avgPrice) <= 20:
+                        cursor.execute("select temp.Restaurant_ID, r.Name, temp.Consumption_Level\
+                                        from (select Restaurant_ID,Consumption_Level\
+                                        from RestaurantConsumptionLevel\
+                                        where Consumption_Level = 'Medium'\
+                                        ORDER BY RAND()\
+                                        limit 5) as temp natural join Restaurants r;")
+                        query = cursor.fetchall()
+                        return render(request, 'recommendation.html', {'query': query}) 
+                    # avgPrice > 20
+                    else: 
+                        cursor.execute("select temp.Restaurant_ID, r.Name, temp.Consumption_Level\
+                                        from (select Restaurant_ID, Consumption_Level\
+                                        from RestaurantConsumptionLevel\
+                                        where Consumption_Level = 'High'\
+                                        ORDER BY RAND()\
+                                        limit 5) as temp natural join Restaurants r;")
+                        query = cursor.fetchall()
+                        return render(request, 'recommendation.html', {'query': query})   
+    else:
+        return render(request,"recommendation.html")
 
 
 
