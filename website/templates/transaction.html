@@ -6,12 +6,6 @@
 
 <body>
 <h1>Christmas Promotion</h1>
-<form action="" method="POST">
-{% csrf_token %}
-Customer_ID: <input type="text" name="cust_id"/><br/>
-Price: <input type="text" name="price"/><br/><br/>
-<input type="submit" value="Search"/>
-</form>
 <br>
 <table border="1">
     <tr>
@@ -19,13 +13,19 @@ Price: <input type="text" name="price"/><br/><br/>
         <td>Order Item ID List</td>
         <td>Order Price</td>
         <td>Order Date</td>
+        <td>Restaurant ID</td>
+        <td>Customer Last Name</td>
+        <td>Customer Address</td>
     </tr>
     {% for x in query%}
     <tr>
     <td>{{ x.0}}</td>
-    <td>{{ x.2}}</td>
+    <td>{{ x.3}}</td>
     <td>{{ x.4}}</td>
     <td>{{ x.5}}</td>
+    <td>{{ x.6}}</td>
+    <td>{{ x.7}}</td>
+    <td>{{ x.9}}</td>
     </tr>
     {% endfor %}
 </table>
