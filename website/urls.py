@@ -24,6 +24,7 @@ urlpatterns = [
     path('advance1/', views.advance1, name='advance1'),
     path('advance2/', views.advance2, name='advance2'),
     path('restaurant/', views.restaurant, name="restaurant"),
+    path('recommendation/', views.recommendation, name="recommendation"),
     path('transaction/', views.transaction, name="transaction"),
 ]
 

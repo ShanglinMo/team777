@@ -1,0 +1,32 @@
+{% extends 'main.html' %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+</head>
+
+<body>
+<h1>Recommend Restaurant</h1>
+<form action="" method="POST">
+{% csrf_token %}
+Customer ID: <input type="text" name="Customer_ID"/><br/>
+<br>
+<input type="submit" value="Recommend"/>
+
+</form>
+<br>
+<table border="1">
+    <tr>
+        <td>Restaurant ID</td>
+        <td>Restautrant Name</td>
+        <td>Restautrant Consumption Level</td>
+    </tr>
+    {% for x in query%}
+    <tr>
+    <td>{{ x.0}}</td>
+    <td>{{ x.1}}</td>
+    <td>{{ x.2}}</td>
+    </tr>
+    {% endfor %}
+</table>
+</body>
+{%endblock%}
