@@ -73,11 +73,11 @@ def insert(request):
 
 def update(request):
         if request.method == 'POST':
-            if request.POST.get('cust_id') and request.POST.get('price'):
+            if request.POST.get('order_id') and request.POST.get('price'):
                 with connection.cursor() as cursor:
                     cursor.execute("UPDATE Orders SET \
-                         price = %s WHERE order_id = 1",  [request.POST.get('price')])
-                    cursor.execute('SELECT * FROM Orders WHERE order_id=1;')
+                         price = %s WHERE order_id = %s",  [request.POST.get('price'),request.POST.get("order_id")])
+                    cursor.execute('SELECT * FROM Orders WHERE order_id=%s;',[request.POST.get("order_id")])
                     query = cursor.fetchall()
                     return render(request, 'update.html', {'query': query})
 
@@ -99,25 +99,6 @@ def delete(request):
                 return render(request,'delete.html')
 
 
-# SELECT o.Date, COUNT(o.Order_ID)
-# FROM Customers c JOIN Orders o USING(Customer_Id)
-# WHERE c.Last_Name LIKE "C%"
-# GROUP BY o.Date
-# ORDER BY o.Date;
-
-# def advance1(request):
-
-#     cursor = connection.cursor()
-#     try:
-#         cursor.execute('SELECT o.Date, COUNT(o.Order_ID) \
-#         FROM Customers AS c JOIN Orders AS o USING(customer_id) \
-#         WHERE c.Last_Name LIKE "C%" \
-#         GROUP BY o.Date \
-#         ORDER BY o.Date;')
-#     finally:
-#         cursor.close()
-#     query = cursor.fetchall()
-#     return render(request, 'advance1.html',{'query': query})
 def advance1(request):
 # template = loader.get_template('insert.html')
     if request.method == 'POST':
@@ -135,23 +116,6 @@ def advance1(request):
             return render(request,'advance1.html')
 
 
-
-# def advance2(request):
-
-#     cursor = connection.cursor()
-#     try:
-#         cursor.execute('SELECT r.Restaurant_ID, r.Name\
-#         FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
-#         WHERE f.Price <= 5 and r.Cuisine_Type LIKE "%Ice Cream%"\
-#         UNION\
-#         SELECT r.Restaurant_ID, r.Name\
-#         FROM Foods f JOIN Restaurants r USING(Restaurant_ID)\
-#         WHERE f.Price <= 15 and r.Cuisine_Type LIKE "%Burger%"\
-#         ORDER BY Name;')
-#     finally:
-#         cursor.close()
-#     query = cursor.fetchall()
-#     return render(request, 'advance2.html',{'query': query})
 
 
 def advance2(request):
@@ -176,12 +140,63 @@ def advance2(request):
     else:
         return render(request,'advance2.html')
 
-# COMMIT;
 def transaction(request):
         with connection.cursor() as cursor:
                 cursor.execute("call christmas();")
                 cursor.execute("select * FROM Orders as O NATURAL JOIN Customers as C WHERE Date = '2024-01-01';")
                 query = cursor.fetchall()
                 return render(request, 'transaction.html', {'query': query})
+
+
+def recommendation(request):
+    if request.method == "POST":
+        if request.POST.get("Customer_ID"): #and request.POST.get("Recommend on History"):
+            with connection.cursor() as cursor:
+                customerID = request.POST.get("Customer_ID")
+                # customerInfo = Orders.objects.raw('select Customer_ID, avg(Price) as avgPrice\
+                #                                     from Orders \
+                #                                     where Customer_ID = %s\
+                #                                     group by Customer_ID',[customerID])
+                cursor.execute('select Customer_ID,avg(Price) as avgPrice\
+                                                     from Orders \
+                                                     where Customer_ID = %s\
+                                                     group by Customer_ID;',[customerID])
+                customerInfo = cursor.fetchall()
+                
+                for c in customerInfo:
+                    avgPrice = c[1]
+                    if int(avgPrice) <= 10:
+                        cursor.execute("select temp.Restaurant_ID, r.Name, temp.Consumption_Level\
+                                        from (select Restaurant_ID, Consumption_Level\
+                                        from RestaurantConsumptionLevel\
+                                        where Consumption_Level = 'Low'\
+                                        ORDER BY RAND()\
+                                        limit 5) as temp natural join Restaurants r;")
+                        query = cursor.fetchall()
+                        return render(request, 'recommendation.html', {'query': query})
+                    elif int(avgPrice) > 10 and int(avgPrice) <= 20:
+                        cursor.execute("select temp.Restaurant_ID, r.Name, temp.Consumption_Level\
+                                        from (select Restaurant_ID,Consumption_Level\
+                                        from RestaurantConsumptionLevel\
+                                        where Consumption_Level = 'Medium'\
+                                        ORDER BY RAND()\
+                                        limit 5) as temp natural join Restaurants r;")
+                        query = cursor.fetchall()
+                        return render(request, 'recommendation.html', {'query': query}) 
+                    # avgPrice > 20
+                    else: 
+                        cursor.execute("select temp.Restaurant_ID, r.Name, temp.Consumption_Level\
+                                        from (select Restaurant_ID, Consumption_Level\
+                                        from RestaurantConsumptionLevel\
+                                        where Consumption_Level = 'High'\
+                                        ORDER BY RAND()\
+                                        limit 5) as temp natural join Restaurants r;")
+                        query = cursor.fetchall()
+                        return render(request, 'recommendation.html', {'query': query})   
+    else:
+        return render(request,"recommendation.html")
+
+
+
 
 
