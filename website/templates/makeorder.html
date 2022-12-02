@@ -6,7 +6,10 @@
 
 <body>
 <h1>Make an Order</h1>
-<h3> Customer: Mechelle Stoneman </h3>
+<h3> Royal Customer Promotion </h3>
+<h5> 5 Orders at one restaurant: 10% OFF! </h5>
+<h5> 10 Orders at one restaurant: 15% OFF! </h5>
+<h5> 20 Orders at one restaurant: 20% OFF! </h5>
 <p> Restaurant: Papa Murphy's </p>
 <p> Please select food to order: </p>
 
@@ -49,8 +52,8 @@
 </form>
 
 {% if orderList %}
-<p> Origin Price: {{ totalPrice }} </p>
-<p> Final Price: {{ finalPrice }} </p>
+<p> Origin Price: {{ totalPrice|floatformat:2 }} </p>
+<p> Final Price: {{ finalPrice|floatformat:2 }} </p>
 {% endif %}
 </body>
 {%endblock%}
