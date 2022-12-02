@@ -143,12 +143,12 @@ def advance2(request):
     else:
         return render(request,'advance2.html')
 
-def transaction(request):
+def storedprocedure(request):
         with connection.cursor() as cursor:
                 cursor.execute("call christmas();")
                 cursor.execute("select * FROM Orders as O NATURAL JOIN Customers as C WHERE Date = '2024-01-01';")
                 query = cursor.fetchall()
-                return render(request, 'transaction.html', {'query': query})
+                return render(request, 'storedprocedure.html', {'query': query})
 
 
 def recommendation(request):

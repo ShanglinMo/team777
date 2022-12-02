@@ -25,7 +25,7 @@ urlpatterns = [
     path('advance2/', views.advance2, name='advance2'),
     path('restaurant/', views.restaurant, name="restaurant"),
     path('recommendation/', views.recommendation, name="recommendation"),
-    path('transaction/', views.transaction, name="transaction"),
+    path('storedprocedure/', views.storedprocedure, name="storedprocedure"),
     path('__debug__/', include('debug_toolbar.urls')),
     path('makeorder/', views.makeorder, name="makeorder"),
 ]
