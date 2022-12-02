@@ -9,6 +9,7 @@ from django.db import connection
 from django.http import HttpResponse
 from django.template import loader
 from .forms import RestaurantSearchForm
+from django.shortcuts import render
 
 
 # def home(request):
@@ -228,6 +229,21 @@ def recommendation(request):
         return render(request,"recommendation.html")
 
 
+def makeorder(request):
+    print(1234556)
+    a = request.method
+    if request.method == 'POST':
+        print(xyzzzz)
+        if request.POST.get('orderItem'):
+            print(34566)
+            orderList = request.POST.getlist('orderItem')
+            for x in orderList:
+                print(x)
+            return render(request, 'makeorder.html', {'orderList': orderList})
+
+    else:
+        return render(request,'makeorder.html')
+    
 
 
 

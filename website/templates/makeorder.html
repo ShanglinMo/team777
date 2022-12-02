@@ -1,0 +1,47 @@
+{% extends 'main.html' %}
+
+{% load crispy_forms_tags %}
+{% block content %}
+</head>
+
+<body>
+<h1>Make an Order</h1>
+<h2>Customer Page</h2>
+<p> Customer: Mechelle Stoneman </p>
+<p> Please select food to order: </p>
+
+<form action='' method='POST'>
+    {% csrf_token %}
+    <input type="checkbox" id="184" name="orderItem" value="184">
+    <label for="184"> Chicken Bacon Artichoke Price: 10.99</label><br>
+
+    <input type="checkbox" id="185" name="orderItem" value="185">
+    <label for="185"> Cowboy Price: 10.99</label><br>
+
+    <input type="checkbox" id="186" name="orderItem" value="186">
+    <label for="186"> Create Your Own Crustless Price: 9</label><br>
+
+    <input type="checkbox" id="187" name="orderItem" value="187">
+    <label for="186"> Gourmet Vegetarian Price: 10.99</label><br>
+
+    <input type="checkbox" id="188" name="orderItem" value="188">
+    <label for="188"> Papa's All Meat  Price: 10.99</label><br>
+
+    <input type="checkbox" id="189" name="orderItem" value="189">
+    <label for="189"> Papa's Favorite - Keto Friendly (Baking Required) Price:10.99</label><br>
+
+    <input type="submit" value="Submit"/>
+</form>
+
+
+<table border="1">
+    {% for x in orderList %}
+    <tr>
+    <td>{{ x.0}}</td>
+    <td>{{ x.1}}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+{%endblock%}
