@@ -6,8 +6,8 @@
 
 <body>
 <h1>Make an Order</h1>
-<h2>Customer Page</h2>
-<p> Customer: Mechelle Stoneman </p>
+<h3> Customer: Mechelle Stoneman </h3>
+<p> Restaurant: Papa Murphy's </p>
 <p> Please select food to order: </p>
 
 <form action='' method='POST'>
@@ -18,30 +18,39 @@
     <input type="checkbox" id="185" name="orderItem" value="185" price=10.99>
     <label for="185"> Cowboy Price: 10.99</label><br>
 
-    <input type="checkbox" id="186" name="orderItem" value="186" price=9>
+    <input type="checkbox" id="186" name="orderItem" value="186">
     <label for="186"> Create Your Own Crustless Price: 9</label><br>
 
-    <input type="checkbox" id="187" name="orderItem" value="187" price=10.99>
+    <input type="checkbox" id="187" name="orderItem" value="187">
     <label for="187"> Gourmet Vegetarian Price: 10.99</label><br>
 
-    <input type="checkbox" id="188" name="orderItem" value="188" price=10.99>
+    <input type="checkbox" id="188" name="orderItem" value="188">
     <label for="188"> Papa's All Meat  Price: 10.99</label><br>
 
-    <input type="checkbox" id="189" name="orderItem" value="189" price=10.99>
-    <label for="189"> Papa's Favorite - Keto Friendly (Baking Required) Price:10.99</label><br>
+    <input type="checkbox" id="189" name="orderItem" value="189">
+    <label for="189"> Papa's Favorite - Keto Friendly Price:10.99</label><br>
+
+    <input type="checkbox" id="192" name="orderItem" value="192">
+    <label for="192"> Murphy's Combo  Price:12.99</label><br>
+
+    <input type="checkbox" id="193" name="orderItem" value="193">
+    <label for="193"> Chicken Garlic Price:12.99</label><br>
+
+    <input type="checkbox" id="201" name="orderItem" value="201">
+    <label for="201"> 5-Meat Stuffed Family Price:16.99</label><br>
+
+    <input type="checkbox" id="210" name="orderItem" value="210">
+    <label for="210"> Chocolate Chip Cookie Dough Price:5</label><br>
+
+    <input type="checkbox" id="213" name="orderItem" value="213">
+    <label for="213"> Soft Drink (2-Liter Pepsi Product) Price:2.49</label><br>
 
     <input type="submit" value="Submit"/>
 </form>
 
-
-<table border="1">
-    {% for x in orderList %}
-    <tr>
-    <td>{{ x.0}}</td>
-    <td>{{ x.1}}</td>
-    </tr>
-    {% endfor %}
-</table>
-
+{% if orderList %}
+<p> Origin Price: {{ totalPrice }} </p>
+<p> Final Price: {{ finalPrice }} </p>
+{% endif %}
 </body>
 {%endblock%}
