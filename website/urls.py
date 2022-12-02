@@ -27,5 +27,6 @@ urlpatterns = [
     path('recommendation/', views.recommendation, name="recommendation"),
     path('transaction/', views.transaction, name="transaction"),
     path('__debug__/', include('debug_toolbar.urls')),
+    path('makeorder/', views.makeorder, name="makeorder"),
 ]
 

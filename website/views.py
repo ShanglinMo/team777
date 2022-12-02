@@ -9,6 +9,7 @@ from django.db import connection
 from django.http import HttpResponse
 from django.template import loader
 from .forms import RestaurantSearchForm
+from django.shortcuts import render
 
 
 # def home(request):
@@ -228,6 +229,36 @@ def recommendation(request):
         return render(request,"recommendation.html")
 
 
+def makeorder(request):
+    if request.method == 'POST':
+        if request.POST.get('orderItem'):
+            with connection.cursor() as cursor:
+                orderList = request.POST.getlist('orderItem')
+                totalPrice = 0
+                idList = "["
+                for x in orderList:
+                    cursor.execute('SELECT Price\
+                                FROM easy_dinner.Foods\
+                                where Item_ID= %s;',[x])
+                    totalPrice += cursor.fetchone()[0]
+                    idList += str(x) + " "
+                idList = idList[:-1]
+                idList += "]"
+                #print(idList)
+                #print(totalPrice)
+                cursor.execute('Select MAX(Order_ID) From Orders')
+                orderId = cursor.fetchone()[0] + 1
+                #print(orderId)
+                cursor.execute('INSERT into Orders(Order_ID, Coupon_ID, Customer_ID, Item_ID_List, Price, Date, Restaurant_ID) \
+                                VALUES (%s, null, 1, %s, %s, "2025-01-01", 4)', [orderId, idList, totalPrice])
+                cursor.execute('Select Price From Orders Where Order_ID = %s', [orderId])
+                finalPrice = cursor.fetchone()[0]
+
+            return render(request, 'makeorder.html', {'orderList': orderList, 'totalPrice': totalPrice, 'finalPrice': finalPrice})
+
+    else:
+        return render(request,'makeorder.html')
+    
 
 
 
